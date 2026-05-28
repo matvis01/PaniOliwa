@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Segmentacja Klientów Smartfonów — Raport Analizy Skupień</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0d0f14;
+    --surface:   #13161e;
+    --surface2:  #1a1e2a;
+    --border:    rgba(255,255,255,0.07);
+    --text:      #e8e4db;
+    --muted:     #7a7d8a;
+    --c1:        #e8a44a;   /* Esteci Premium – złoty */
+    --c2:        #5b9cf6;   /* Pragmatyczni – niebieski */
+    --c3:        #4ecb8d;   /* Entuzjaści – zielony */
+    --c1-dim:    rgba(232,164,74,0.12);
+    --c2-dim:    rgba(91,156,246,0.12);
+    --c3-dim:    rgba(78,203,141,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    padding: 100px 40px 80px;
+    text-align: center;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -120px; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(ellipse, rgba(91,156,246,0.12) 0%, rgba(232,164,74,0.06) 40%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-label {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--c3);
+    border: 1px solid rgba(78,203,141,0.35);
+    padding: 6px 18px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    max-width: 860px;
+    margin: 0 auto 20px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--c1);
+  }
+
+  .hero-sub {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 560px;
+    margin: 0 auto 50px;
+    font-weight: 300;
+  }
+
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+
+  .hero-meta-item {
+    text-align: center;
+  }
+
+  .hero-meta-item .num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    color: var(--text);
+    display: block;
+  }
+
+  .hero-meta-item .lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  section { padding: 72px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  .section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    line-height: 1.2;
+    margin-bottom: 40px;
+  }
+
+  /* ── SEGMENT CARDS ── */
+  .segments-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 900px) { .segments-grid { grid-template-columns: 1fr; } }
+
+  .seg-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .seg-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+  }
+
+  .seg-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .seg-card.c1::before { background: var(--c1); }
+  .seg-card.c2::before { background: var(--c2); }
+  .seg-card.c3::before { background: var(--c3); }
+
+  .seg-card::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    opacity: 0.4;
+  }
+
+  .seg-card.c1::after { background: radial-gradient(circle, var(--c1-dim), transparent 70%); }
+  .seg-card.c2::after { background: radial-gradient(circle, var(--c2-dim), transparent 70%); }
+  .seg-card.c3::after { background: radial-gradient(circle, var(--c3-dim), transparent 70%); }
+
+  .seg-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.6;
+  }
+
+  .c1 .seg-num { color: var(--c1); }
+  .c2 .seg-num { color: var(--c2); }
+  .c3 .seg-num { color: var(--c3); }
+
+  .seg-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.55rem;
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+
+  .seg-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .seg-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.88rem;
+  }
+
+  .seg-stat .s-label { color: var(--muted); }
+  .seg-stat .s-val { font-weight: 600; font-family: 'DM Mono', monospace; font-size: 0.85rem; }
+
+  .seg-bar-wrap {
+    height: 4px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 4px;
+    margin-top: 4px;
+  }
+
+  .seg-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1.2s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  .c1 .seg-bar { background: var(--c1); }
+  .c2 .seg-bar { background: var(--c2); }
+  .c3 .seg-bar { background: var(--c3); }
+
+  .seg-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.6;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+  }
+
+  .seg-pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-top: 16px;
+  }
+
+  .c1 .seg-pill { background: var(--c1-dim); color: var(--c1); }
+  .c2 .seg-pill { background: var(--c2-dim); color: var(--c2); }
+  .c3 .seg-pill { background: var(--c3-dim); color: var(--c3); }
+
+  /* ── CHART CARDS ── */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .charts-grid .full { grid-column: 1 / -1; }
+
+  @media (max-width: 800px) { .charts-grid { grid-template-columns: 1fr; } }
+
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .chart-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  }
+
+  .chart-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .chart-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .chart-header-text {}
+
+  .chart-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .chart-subtitle {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .chart-img-wrap {
+    padding: 20px;
+    background: var(--surface2);
+  }
+
+  .chart-img-wrap img {
+    width: 100%;
+    border-radius: 8px;
+    display: block;
+  }
+
+  .chart-analysis {
+    padding: 24px 28px;
+  }
+
+  .analysis-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c3);
+    margin-bottom: 12px;
+  }
+
+  .analysis-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--c3);
+    display: inline-block;
+  }
+
+  .chart-analysis p {
+    font-size: 0.93rem;
+    color: #b8b4ac;
+    line-height: 1.75;
+  }
+
+  .chart-analysis strong { color: var(--text); font-weight: 600; }
+
+  /* ── FINDINGS ── */
+  .findings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+
+  @media (max-width: 900px) { .findings-grid { grid-template-columns: 1fr; } }
+
+  .finding-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+  }
+
+  .finding-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--border);
+    margin-bottom: 16px;
+  }
+
+  .finding-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+
+  .finding-body {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .conclusion-box {
+    background: linear-gradient(135deg, rgba(232,164,74,0.07), rgba(78,203,141,0.07));
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 40px 48px;
+    text-align: center;
+  }
+
+  .conclusion-box h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.7rem;
+    margin-bottom: 16px;
+  }
+
+  .conclusion-box p {
+    color: var(--muted);
+    max-width: 680px;
+    margin: 0 auto;
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-label  { animation: fadeUp 0.6s ease both; }
+  .hero h1     { animation: fadeUp 0.6s 0.1s ease both; }
+  .hero-sub    { animation: fadeUp 0.6s 0.2s ease both; }
+  .hero-meta   { animation: fadeUp 0.6s 0.3s ease both; }
+
+  /* Intersection observer reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-label">Analiza Skupień · Metoda Warda · 2026</div>
+  <h1>Segmentacja Klientów<br><em>Rynku Smartfonów</em></h1>
+  <p class="hero-sub">Hierarchiczna analiza skupień 200 respondentów oceniających baterie, aparat, wydajność i budżet zakupowy.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="num">200</span>
+      <span class="lbl">Respondentów</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="num">4</span>
+      <span class="lbl">Zmienne</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="num">3</span>
+      <span class="lbl">Segmenty</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="num">Ward</span>
+      <span class="lbl">Metoda</span>
+    </div>
+  </div>
+</header>
+
+<!-- SEGMENT OVERVIEW -->
+<section>
+  <div class="container">
+    <p class="section-tag">01 · Zidentyfikowane segmenty</p>
+    <h2 class="section-title">Trzy profile nabywców</h2>
+    <div class="segments-grid">
+
+      <!-- Klaster 1 -->
+      <div class="seg-card c1 reveal">
+        <div class="seg-num">Klaster 1 · 66 osób · 33%</div>
+        <div class="seg-name">Esteci<br>Premium</div>
+        <div class="seg-stats">
+          <div>
+            <div class="seg-stat"><span class="s-label">Bateria</span><span class="s-val">3.42 / 5</span></div>
+            <div class="seg-bar-wrap"><div class="seg-bar" style="width:68.4%"></div></div>
+          </div>
+          <div>
+            <div class="seg-stat"><span class="s-label">Aparat</span><span class="s-val">3.15 / 5</span></div>
+            <div class="seg-bar-wrap"><div class="seg-bar" style="width:63%"></div></div>
+          </div>
+          <div>
+            <div class="seg-stat"><span class="s-label">Wydajność</span><span class="s-val c1">1.79 / 5 ↓</span></div>
+            <div class="seg-bar-wrap"><div class="seg-bar" style="width:35.8%"></div></div>
+          </div>
+          <div>
+            <div class="seg-stat"><span class="s-label">Budżet</span><span class="s-val" style="color:var(--c1)">5 853 zł ↑</span></div>
+            <div class="seg-bar-wrap"><div class="seg-bar" style="width:100%"></div></div>
+          </div>
+        </div>
+        <div class="seg-desc">Dysponują najwyższym budżetem, lecz minimalizują znaczenie wydajności procesora. Prawdopodobnie kupują smartfony ze względu na markę i design, nie parametry.</div>
+        <span class="seg-pill">Wysoki budżet · Niska wydajność</span>
+      </div>
+
+      <!-- Klaster 2 -->
+      <div class="seg-card c2 reveal">
+        <div class="seg-num">Klaster 2 · 55 osób · 27.5%</div>
+        <div class="seg-name">Pragmatyczni<br>Oszczędni</div>
+        <div class="seg-stats">
+          <div>
+            <div class="seg-stat"><span class="s-label">Bateria</span><span class="s-val" style="color:var(--c2)">2.38 / 5 ↓</span></div>
+            <div class="seg-bar-wrap"><div class="seg-bar" style="width:47.6%"></div></div>
+          </div>
+          <div>
+            <div class="seg-stat"><span class="s-label">Aparat</span><span class="s-val">2.91 / 5</span></div>
+            <div class="seg-bar-wrap"><div class="seg-bar" style="width:58.2%"></div></div>
+          </div>
+          <div>
+            <div class="seg-stat"><span class="s-label">Wydajność</span><span class="s-val">2.25 / 5</span></div>
+            <div class="seg-bar-wrap"><div class="seg-bar" style="width:45%"></div></div>
+          </div>
+          <div>
+            <div class="seg-stat"><span class="s-label">Budżet</span><span class="s-val" style="color:var(--c2)">2 385 zł ↓</span></div>
+            <div class="seg-bar-wrap"><div class="seg-bar" style="width:40.7%"></div></div>
+          </div>
+        </div>
+        <div class="seg-desc">Najniższy budżet i niskie oceny wszystkich cech. Szukają tańszych urządzeń do podstawowych zastosowań. Wrażliwi na cenę, nie na specyfikację.</div>
+        <span class="seg-pill">Niski budżet · Podstawowe potrzeby</span>
+      </div>
+
+      <!-- Klaster 3 -->
+      <div class="seg-card c3 reveal">
+        <div class="seg-num">Klaster 3 · 79 osób · 39.5%</div>
+        <div class="seg-name">Entuzjaści<br>Technologii</div>
+        <div class="seg-stats">
+          <div>
+            <div class="seg-stat"><span class="s-label">Bateria</span><span class="s-val">3.15 / 5</span></div>
+            <div class="seg-bar-wrap"><div class="seg-bar" style="width:63%"></div></div>
+          </div>
+          <div>
+            <div class="seg-stat"><span class="s-label">Aparat</span><span class="s-val">3.14 / 5</span></div>
+            <div class="seg-bar-wrap"><div class="seg-bar" style="width:62.8%"></div></div>
+          </div>
+          <div>
+            <div class="seg-stat"><span class="s-label">Wydajność</span><span class="s-val" style="color:var(--c3)">4.28 / 5 ↑</span></div>
+            <div class="seg-bar-wrap"><div class="seg-bar" style="width:85.6%"></div></div>
+          </div>
+          <div>
+            <div class="seg-stat"><span class="s-label">Budżet</span><span class="s-val">4 605 zł</span></div>
+            <div class="seg-bar-wrap"><div class="seg-bar" style="width:78.7%"></div></div>
+          </div>
+        </div>
+        <div class="seg-desc">Największy segment. Cenią przede wszystkim wydajność procesora — ocena 4.28 jest wyraźnie dominującą preferencją. Gotowi zapłacić umiarkowaną cenę za sprawne urządzenie.</div>
+        <span class="seg-pill">Wydajność · Największa grupa</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CHARTS -->
+<section>
+  <div class="container">
+    <p class="section-tag">02 · Diagnostyka metody</p>
+    <h2 class="section-title">Dobór liczby skupień</h2>
+    <div class="charts-grid">
+
+      <!-- Łokieć -->
+      <div class="chart-card reveal">
+        <div class="chart-header">
+          <div class="chart-icon" style="background:rgba(91,156,246,0.15)">📉</div>
+          <div class="chart-header-text">
+            <div class="chart-title">Metoda Łokcia</div>
+            <div class="chart-subtitle">Wykres osierocenia · Ward D2</div>
+          </div>
+        </div>
+        <div class="chart-img-wrap">
+          <img src="metoda_lokcia.png" alt="Metoda Łokcia">
+        </div>
+        <div class="chart-analysis">
+          <div class="analysis-badge">Interpretacja</div>
+          <p>Krzywa odległości wiązania wykazuje wyraźne <strong>załamanie przy k&nbsp;=&nbsp;3</strong> — po tym punkcie dalszy podział na kolejne skupienia przynosi marginalny przyrost jakości kosztem rosnącej złożoności modelu. Wartość przy przejściu 2→3 jest znacząco wyższa niż przy 3→4, co jednoznacznie wskazuje na <strong>trzy skupienia jako optymalny podział</strong> badanej populacji.</p>
+        </div>
+      </div>
+
+      <!-- Silhouette avg -->
+      <div class="chart-card reveal">
+        <div class="chart-header">
+          <div class="chart-icon" style="background:rgba(78,203,141,0.15)">🔬</div>
+          <div class="chart-header-text">
+            <div class="chart-title">Metoda Silhouette</div>
+            <div class="chart-subtitle">Średnia szerokość sylwetki · k = 2–15</div>
+          </div>
+        </div>
+        <div class="chart-img-wrap">
+          <img src="silhouette_method.png" alt="Metoda Silhouette">
+        </div>
+        <div class="chart-analysis">
+          <div class="analysis-badge">Interpretacja</div>
+          <p>Wykres potwierdza wybór k&nbsp;=&nbsp;3: wartości silhouette wynoszą od <strong>0.13 do 0.20</strong>, co klasyfikuje skupienia jako <strong>umiarkowanie spójne</strong> (przedział 0.10–0.25 jest typowy dla danych ankietowych na skali porządkowej). Wyższe wartości silhouette dla k&nbsp;=&nbsp;2 sugerują, że granica między Klastrem 2 a pozostałymi jest najostrzejsza, jednak podział na 3 grupy wnosi istotną wartość interpretacyjną dla celów marketingowych.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DENDROGRAM + DETAIL -->
+<section>
+  <div class="container">
+    <p class="section-tag">03 · Struktura hierarchiczna</p>
+    <h2 class="section-title">Analiza dendrogramu i sylwetek</h2>
+    <div class="charts-grid">
+
+      <div class="chart-card full reveal">
+        <div class="chart-header">
+          <div class="chart-icon" style="background:rgba(232,164,74,0.15)">🌳</div>
+          <div class="chart-header-text">
+            <div class="chart-title">Dendrogram — Metoda Warda</div>
+            <div class="chart-subtitle">Hierarchiczna struktura skupień · Odległość euklidesowa</div>
+          </div>
+        </div>
+        <div class="chart-img-wrap">
+          <img src="dendrogram.png" alt="Dendrogram">
+        </div>
+        <div class="chart-analysis">
+          <div class="analysis-badge">Interpretacja</div>
+          <p>Dendrogram ujawnia <strong>trzy wyraźnie odseparowane gałęzie</strong>, które łączą się ze sobą przy stosunkowo dużych odległościach — co potwierdza istotność podziału. Najwcześniej (przy najniższych odległościach) łączą się wewnątrz siebie obserwacje należące do Klastra 3 (Entuzjaści Technologii), co świadczy o <strong>największej jednorodności wewnętrznej</strong> tej grupy. Klastry 1 i 2 wykazują nieco większy rozrzut wewnętrzny, lecz odległość między samymi klastrami jest wystarczająca, by uzasadnić odrębność każdego segmentu. Czerwona linia cięcia prawidłowo dzieli drzewo na trzy spójne podgrupy.</p>
+        </div>
+      </div>
+
+      <div class="chart-card full reveal">
+        <div class="chart-header">
+          <div class="chart-icon" style="background:rgba(78,203,141,0.15)">📊</div>
+          <div class="chart-header-text">
+            <div class="chart-title">Wykres Sylwetki — szczegółowy</div>
+            <div class="chart-subtitle">Każdy respondent · k = 3 skupień</div>
+          </div>
+        </div>
+        <div class="chart-img-wrap">
+          <img src="silhouette_detail.png" alt="Silhouette Detail">
+        </div>
+        <div class="chart-analysis">
+          <div class="analysis-badge">Interpretacja</div>
+          <p>Klaster 2 (Pragmatyczni Oszczędni) osiąga <strong>najwyższą średnią szerokość sylwetki 0.20</strong>, co oznacza, że jego członkowie są najbardziej jednorodną i najlepiej oddzieloną grupą — wyraźnie odróżniają się od pozostałych. Klaster 3 ma najniższą wartość <strong>0.13</strong>, co wskazuje na pewne nakładanie się preferencji z Klastrem 1 — obie grupy mają zbliżone oceny Baterii i Aparatu, różnią je przede wszystkim Wydajność i Budżet. Ujemne wartości sylwetki u nielicznych respondentów sugerują, że ok. <strong>5–8% obserwacji balansuje na granicy</strong> między segmentami — co jest normalnym zjawiskiem w badaniach preferencji konsumenckich.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROFILES -->
+<section>
+  <div class="container">
+    <p class="section-tag">04 · Profilowanie segmentów</p>
+    <h2 class="section-title">Porównanie grup i budżetów</h2>
+    <div class="charts-grid">
+
+      <div class="chart-card full reveal">
+        <div class="chart-header">
+          <div class="chart-icon" style="background:rgba(232,164,74,0.15)">📈</div>
+          <div class="chart-header-text">
+            <div class="chart-title">Profile Segmentów — Średnie Ocen</div>
+            <div class="chart-subtitle">Bateria · Aparat · Wydajność · skala 1–5</div>
+          </div>
+        </div>
+        <div class="chart-img-wrap">
+          <img src="profile_segmentow.png" alt="Profile segmentów">
+        </div>
+        <div class="chart-analysis">
+          <div class="analysis-badge">Interpretacja</div>
+          <p>Wykres profili jednoznacznie wskazuje, że <strong>Wydajność jest zmienną dyskryminującą</strong> segmenty — to ona najbardziej różnicuje grupy. Klaster 3 osiąga tu aż <strong>4.28 pkt</strong>, podczas gdy Klaster 1 zaledwie <strong>1.79 pkt</strong> — różnica ponad 2.5 punktu na skali 5-stopniowej. Bateria i Aparat są <strong>stosunkowo podobne we wszystkich grupach</strong> (wartości 2.38–3.42), co sugeruje, że nie są kluczowymi czynnikami różnicującymi przy wyborze smartfona w badanej próbie. Strategicznie: komunikacja marketingowa do Klastra 3 powinna eksponować benchmarki procesora, do Klastra 1 — design i prestiż marki.</p>
+        </div>
+      </div>
+
+      <div class="chart-card reveal">
+        <div class="chart-header">
+          <div class="chart-icon" style="background:rgba(78,203,141,0.15)">💳</div>
+          <div class="chart-header-text">
+            <div class="chart-title">Budżet per Segment</div>
+            <div class="chart-subtitle">Średni budżet zakupowy w PLN</div>
+          </div>
+        </div>
+        <div class="chart-img-wrap">
+          <img src="budzet_per_segment.png" alt="Budżet per segment">
+        </div>
+        <div class="chart-analysis">
+          <div class="analysis-badge">Interpretacja</div>
+          <p>Rozpiętość budżetów jest ekonomicznie bardzo istotna: <strong>2 385 zł vs 5 853 zł</strong> — to różnica 2.45×. Esteci Premium (Klaster 1) dysponują budżetem typowym dla <strong>segmentu premium/flagship</strong>, Pragmatyczni Oszczędni — dla segmentu <strong>budżetowego i mid-range</strong>. Entuzjaści Technologii (4 605 zł) mieszczą się w segmencie <strong>upper-mid</strong>, gdzie cena–wydajność jest optymalnym kryterium wyboru. Taka segmentacja budżetowa pozwala precyzyjnie dopasować ofertę handlową do każdego profilu nabywcy.</p>
+        </div>
+      </div>
+
+      <div class="chart-card reveal">
+        <div class="chart-header">
+          <div class="chart-icon" style="background:rgba(91,156,246,0.15)">📦</div>
+          <div class="chart-header-text">
+            <div class="chart-title">Wykresy Ramka-Wąsy</div>
+            <div class="chart-subtitle">Rozkład wartości cech · wszystkie segmenty</div>
+          </div>
+        </div>
+        <div class="chart-img-wrap">
+          <img src="boxploty_cechy.png" alt="Box-ploty">
+        </div>
+        <div class="chart-analysis">
+          <div class="analysis-badge">Interpretacja</div>
+          <p>Box-ploty ujawniają dwa kluczowe wzorce: po pierwsze, <strong>Wydajność ma zaskakująco niską wariancję</strong> wewnątrz Klastra 3 — wąskie pudełko wskazuje na bardzo jednorodne preferencje, co czyni ten segment szczególnie przewidywalnym dla producentów. Po drugie, <strong>Bateria i Aparat wykazują znaczne nakładanie się rozkładów</strong> między klastrami — pudełka Q1–Q3 często się przecinają — co statystycznie potwierdza, że te cechy nie są głównymi wyznacznikami przynależności do segmentu. Budżet zaś ma najszerszy rozrzut w Klastrze 1, co sugeruje niejednorodność finansową wśród Estetyków Premium.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONCLUSIONS -->
+<section>
+  <div class="container">
+    <p class="section-tag">05 · Wnioski</p>
+    <h2 class="section-title">Rekomendacje strategiczne</h2>
+
+    <div class="findings-grid">
+      <div class="finding-item reveal">
+        <div class="finding-num">01</div>
+        <div class="finding-title" style="color:var(--c1)">Esteci Premium → Flagship</div>
+        <div class="finding-body">33% próby, budżet ~5 853 zł. Kieruj do nich iPhone'a, Galaxy S i podobne urządzenia premium. Eksponuj design, materiały i prestiż marki — parametry techniczne są dla nich drugorzędne. Kanały: social media lifestyle, influencer marketing.</div>
+      </div>
+      <div class="finding-item reveal">
+        <div class="finding-num">02</div>
+        <div class="finding-title" style="color:var(--c2)">Pragmatyczni → Budżet</div>
+        <div class="finding-body">27.5% próby, budżet ~2 385 zł. Segment wrażliwy cenowo, szukający solidnego urządzenia bez zbędnych bajerów. Skuteczne będą promocje, zestawy z akcesoriami i porównania cena/jakość. Kanały: porównywarki cenowe, e-mail.</div>
+      </div>
+      <div class="finding-item reveal">
+        <div class="finding-num">03</div>
+        <div class="finding-title" style="color:var(--c3)">Entuzjaści → Upper-Mid</div>
+        <div class="finding-body">Największy segment (39.5%), budżet ~4 605 zł. To kluczowi klienci linii upper-mid. Decyzja zakupowa opiera się na benchmarkach procesora i RAM. Skuteczne treści: recenzje techniczne, testy wydajnościowe, porównania chipsetów. Kanały: YouTube Tech, fora.</div>
+      </div>
+    </div>
+
+    <div class="conclusion-box reveal">
+      <h3>Podsumowanie analizy</h3>
+      <p>Hierarchiczna analiza skupień metodą Warda z odległością euklidesową pozwoliła wyodrębnić <strong>trzy statystycznie uzasadnione segmenty</strong> klientów rynku smartfonów. Kluczową zmienną dyskryminującą okazała się <strong>Wydajność</strong>, a nie — jak mogłoby się wydawać intuicyjnie — Aparat czy Bateria. Budżet jest silnie skorelowany z przynależnością do segmentu, co daje solidne podstawy do budowania spersonalizowanej strategii cenowej i komunikacyjnej. Wartości silhouette na poziomie 0.13–0.20 są typowe dla danych ankietowych i nie podważają trafności segmentacji w kontekście jej użyteczności biznesowej.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Analiza skupień · Metoda Warda · R 4.6.0 · factoextra · cluster · ggplot2 · n = 200
+</footer>
+
+<script>
+  // Intersection Observer dla animacji reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
