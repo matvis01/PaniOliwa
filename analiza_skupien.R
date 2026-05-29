@@ -63,8 +63,7 @@ p_lokiec <- ggplot(df_lokiec, aes(x = k, y = odleglosc)) +
   geom_point(colour = "#2980b9", size = 3.5) +
   scale_x_continuous(breaks = 2:(k_max + 1)) +
   labs(
-    title    = "Metoda Łokcia – wybór liczby skupień",
-    subtitle = "Szukaj punktu, po którym krzywa gwałtownie rośnie ('załamania')",
+    title = "Metoda Łokcia – wybór liczby skupień",
     x = "Liczba skupień (k)", y = "Odległość wiązania (suma kwadratów)"
   ) +
   theme_minimal(base_size = 13) +
@@ -101,8 +100,7 @@ p_silhouette_avg <- ggplot(df_sil, aes(x = k, y = sil)) +
            label = paste("Optimum: k =", k_sil_opt),
            colour = "#e74c3c", fontface = "bold", size = 4) +
   labs(
-    title    = "Metoda Silhouette – wybór liczby skupień",
-    subtitle = "Czerwony słupek = optymalna liczba skupień (najwyższa średnia szerokość sylwetki)",
+    title = "Metoda Silhouette – wybór liczby skupień",
     x = "Liczba skupień (k)", y = "Średnia szerokość sylwetki"
   ) +
   theme_minimal(base_size = 13) +
@@ -121,8 +119,7 @@ sil_detail <- silhouette(cutree(hc, k = k_wybrane), dist_macierz)
 p_sil_detail <- fviz_silhouette(sil_detail, palette = kolory[1:k_wybrane],
                                  ggtheme = theme_minimal(base_size = 12)) +
   labs(
-    title    = paste("Wykres sylwetki dla k =", k_wybrane, "skupień"),
-    subtitle = "Każdy słupek = jeden respondent. Wartości ujemne = błędna klasyfikacja.",
+    title = paste("Wykres sylwetki dla k =", k_wybrane, "skupień"),
     x = "Respondenci (posortowani wg klastra)", y = "Szerokość sylwetki"
   ) +
   theme(plot.title = element_text(face = "bold", size = 15))
@@ -150,7 +147,7 @@ p_dendrogram <- fviz_dend(
   rect_border   = c("#e74c3c", "#2ecc71", "#3498db", "#f39c12", "#9b59b6")[1:k_wybrane],
   rect_fill     = TRUE,
   main          = paste("Dendrogram – Metoda Warda |", k_wybrane, "skupień"),
-  sub           = "Każdy kolor to osobny segment; wysokość łączenia = miara różnorodności",
+  sub           = "",
   xlab          = "Respondenci (ID)",
   ylab          = "Odległość wiązania"
 ) +
@@ -205,8 +202,7 @@ p_profil <- ggplot(df_profil, aes(x = Cecha, y = Srednia,
   scale_colour_manual(values = kolory) +
   scale_y_continuous(limits = c(1, 5), breaks = 1:5) +
   labs(
-    title    = "Profile segmentów – średnie oceny cech (skala 1–5)",
-    subtitle = "Każda linia to jeden segment. Wyżej = ważniejsza/wyżej oceniana cecha.",
+    title = "Profile segmentów – średnie oceny cech (skala 1–5)",
     x = NULL, y = "Średnia ocena", colour = "Segment (Klaster)"
   ) +
   theme_minimal(base_size = 13) +
@@ -256,8 +252,7 @@ p_boxplot <- ggplot(df_box, aes(x = Klaster, y = Wartosc, fill = Klaster)) +
   facet_wrap(~ Cecha, scales = "free_y", ncol = 2) +
   scale_fill_manual(values = kolory) +
   labs(
-    title    = "Wykresy ramka-wąsy – rozkład cech w segmentach",
-    subtitle = "Pudełko = Q1–Q3, gruba linia = mediana, wąsy = 1.5×IQR",
+    title = "Wykresy ramka-wąsy – rozkład cech w segmentach",
     x = "Segment (Klaster)", y = "Wartość", fill = "Klaster"
   ) +
   theme_minimal(base_size = 13) +
