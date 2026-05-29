@@ -1,6 +1,6 @@
 # =============================================================================
 # ANALIZA SKUPIEŃ – odpowiednik procedury z programu Statistica
-# Dane: respondenci_smartfony.xlsx (200 obserwacji)
+# Dane: baza_danych.xlsx (100 obserwacji)
 # Metoda Warda, odległość euklidesowa
 # =============================================================================
 
@@ -20,11 +20,11 @@ library(tidyr)
 # =============================================================================
 # KROK 1 – WCZYTANIE DANYCH
 # =============================================================================
-dane <- read_excel("respondenci_smartfony.xlsx")
+dane <- read_excel("baza_danych.xlsx")
+names(dane) <- trimws(names(dane))   # usuń ewentualne spacje z nazw kolumn
 
-# Kolumny do segmentacji
-# Budżet skalujemy razem z pozostałymi (standaryzacja z=score wyrówna skale)
-cechy <- c("Bateria", "Aparat", "Wydajność", "Budżet")
+# Kolumny do segmentacji (nowy plik ma 2 dodatkowe cechy: Marka i Funkcje AI)
+cechy <- c("Bateria", "Aparat", "Wydajność", "Budżet", "Marka", "Funkcje AI")
 
 cat("Wczytano", nrow(dane), "obserwacji,", ncol(dane), "kolumn.\n")
 cat("Kolumny:", paste(names(dane), collapse = ", "), "\n\n")
@@ -36,7 +36,7 @@ print(summary(dane[, cechy]))
 # Odpowiednik: Statistica ➔ Analiza skupień ➔ Metoda Warda
 # =============================================================================
 X <- scale(dane[, cechy])          # standaryzacja – każda cecha ma mean=0, sd=1
-rownames(X) <- dane$ID
+rownames(X) <- dane$`Id Klienta`
 
 dist_macierz <- dist(X, method = "euclidean")
 hc <- hclust(dist_macierz, method = "ward.D2")   # Ward D2 = klasyczna Metoda Warda
@@ -190,7 +190,7 @@ print(as.data.frame(srednie))
 # Odpowiednik: "Wykres średnich" / profile w Statistica
 # Budżet skalujemy do 1-5 na potrzeby wykresu (żeby był porównywalny z resztą)
 
-cechy_skala <- c("Bateria", "Aparat", "Wydajność")   # cechy na skali 1-5
+cechy_skala <- c("Bateria", "Aparat", "Wydajność", "Marka", "Funkcje AI")   # cechy na skali 1-5
 
 df_profil <- srednie %>%
   select(Klaster, all_of(cechy_skala)) %>%
