@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Segmentacja Klientów Smartfonów — Raport Analizy Skupień</title>
+<title>Smartphone Customer Segmentation — Cluster Analysis Report</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -376,13 +376,13 @@
 
 <!-- HERO -->
 <header class="hero">
-  <div class="hero-label">Analiza Skupień · Metoda Warda · baza_danych.xlsx · 2026</div>
-  <h1>Segmentacja Klientów<br><em>Rynku Smartfonów</em></h1>
-  <p class="hero-sub">Hierarchiczna analiza skupień 100 klientów według 6 kryteriów: bateria, aparat, wydajność, budżet, marka i funkcje AI. Bardzo wysokie wartości silhouette potwierdzają doskonałą separację segmentów.</p>
+  <div class="hero-label">Cluster Analysis · Ward's Method · baza_danych.xlsx · 2026</div>
+  <h1>Customer Segmentation<br><em>of the Smartphone Market</em></h1>
+  <p class="hero-sub">Hierarchical cluster analysis of 100 customers across 6 criteria: battery, camera, performance, budget, brand, and AI features. Very high silhouette values confirm excellent segment separation.</p>
   <div class="hero-meta">
-    <div class="hero-meta-item"><span class="num">100</span><span class="lbl">Klientów</span></div>
-    <div class="hero-meta-item"><span class="num">6</span><span class="lbl">Zmiennych</span></div>
-    <div class="hero-meta-item"><span class="num">3</span><span class="lbl">Segmenty</span></div>
+    <div class="hero-meta-item"><span class="num">100</span><span class="lbl">Customers</span></div>
+    <div class="hero-meta-item"><span class="num">6</span><span class="lbl">Variables</span></div>
+    <div class="hero-meta-item"><span class="num">3</span><span class="lbl">Segments</span></div>
     <div class="hero-meta-item"><span class="num">0.70</span><span class="lbl">Max Silhouette</span></div>
   </div>
 </header>
@@ -390,112 +390,112 @@
 <!-- SEGMENTS -->
 <section>
   <div class="container">
-    <p class="section-tag">01 · Zidentyfikowane segmenty</p>
-    <h2 class="section-title">Trzy wyraźnie odseparowane profile nabywców</h2>
+    <p class="section-tag">01 · Identified Segments</p>
+    <h2 class="section-title">Three Clearly Separated Buyer Profiles</h2>
     <div class="segments-grid">
 
-      <!-- Klaster 1 -->
+      <!-- Cluster 1 -->
       <div class="seg-card c1 reveal">
-        <div class="seg-num">Klaster 1 · 33 osoby · 33%</div>
-        <div class="seg-name">Pragmatyczni<br>Długodystansowcy</div>
+        <div class="seg-num">Cluster 1 · 33 people · 33%</div>
+        <div class="seg-name">Pragmatic<br>Long-Distance Users</div>
         <div class="seg-stats">
           <div>
-            <div class="seg-stat"><span class="s-label">Bateria</span><span class="s-val" style="color:var(--c1)">4.61 / 5 ↑↑</span></div>
+            <div class="seg-stat"><span class="s-label">Battery</span><span class="s-val" style="color:var(--c1)">4.61 / 5 ↑↑</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:92.2%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Aparat</span><span class="s-val">2.39 / 5</span></div>
+            <div class="seg-stat"><span class="s-label">Camera</span><span class="s-val">2.39 / 5</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:47.8%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Wydajność</span><span class="s-val">2.39 / 5</span></div>
+            <div class="seg-stat"><span class="s-label">Performance</span><span class="s-val">2.39 / 5</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:47.8%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Marka</span><span class="s-val" style="color:var(--muted)">1.39 / 5 ↓</span></div>
+            <div class="seg-stat"><span class="s-label">Brand</span><span class="s-val" style="color:var(--muted)">1.39 / 5 ↓</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:27.8%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Funkcje AI</span><span class="s-val" style="color:var(--muted)">1.18 / 5 ↓</span></div>
+            <div class="seg-stat"><span class="s-label">AI Features</span><span class="s-val" style="color:var(--muted)">1.18 / 5 ↓</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:23.6%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Budżet</span><span class="s-val" style="color:var(--muted)">1 759 zł ↓</span></div>
+            <div class="seg-stat"><span class="s-label">Budget</span><span class="s-val" style="color:var(--muted)">PLN 1,759 ↓</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:25.6%"></div></div>
           </div>
         </div>
-        <div class="seg-desc">Jeden priorytet: <strong style="color:var(--c1)">bateria</strong>. Marka i AI są im kompletnie obojętne. Szukają taniego, wytrzymałego urządzenia — idealni odbiorcy telefonów "rugged" i seniorskich z ogromnym akumulatorem.</div>
-        <span class="seg-pill">Bateria 4.61 · Budżet 1 759 zł</span>
+        <div class="seg-desc">One priority: <strong style="color:var(--c1)">battery</strong>. Brand and AI are completely irrelevant to them. They seek an affordable, durable device — ideal audience for rugged and senior phones with a large battery.</div>
+        <span class="seg-pill">Battery 4.61 · Budget PLN 1,759</span>
         <span class="sil-badge">sil = 0.70 ★</span>
       </div>
 
-      <!-- Klaster 2 -->
+      <!-- Cluster 2 -->
       <div class="seg-card c2 reveal">
-        <div class="seg-num">Klaster 2 · 33 osoby · 33%</div>
-        <div class="seg-name">Technologiczni<br>Innowatorzy</div>
+        <div class="seg-num">Cluster 2 · 33 people · 33%</div>
+        <div class="seg-name">Tech<br>Innovators</div>
         <div class="seg-stats">
           <div>
-            <div class="seg-stat"><span class="s-label">Bateria</span><span class="s-val">2.48 / 5</span></div>
+            <div class="seg-stat"><span class="s-label">Battery</span><span class="s-val">2.48 / 5</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:49.6%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Aparat</span><span class="s-val">3.48 / 5</span></div>
+            <div class="seg-stat"><span class="s-label">Camera</span><span class="s-val">3.48 / 5</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:69.6%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Wydajność</span><span class="s-val" style="color:var(--c2)">4.67 / 5 ↑↑</span></div>
+            <div class="seg-stat"><span class="s-label">Performance</span><span class="s-val" style="color:var(--c2)">4.67 / 5 ↑↑</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:93.4%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Marka</span><span class="s-val">2.45 / 5</span></div>
+            <div class="seg-stat"><span class="s-label">Brand</span><span class="s-val">2.45 / 5</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:49%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Funkcje AI</span><span class="s-val" style="color:var(--c2)">4.36 / 5 ↑</span></div>
+            <div class="seg-stat"><span class="s-label">AI Features</span><span class="s-val" style="color:var(--c2)">4.36 / 5 ↑</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:87.2%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Budżet</span><span class="s-val">4 355 zł</span></div>
+            <div class="seg-stat"><span class="s-label">Budget</span><span class="s-val">PLN 4,355</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:63.5%"></div></div>
           </div>
         </div>
-        <div class="seg-desc">Chcą <strong style="color:var(--c2)">mocy obliczeniowej i sztucznej inteligencji</strong>. Marka nie robi na nich wrażenia — liczy się chipset i funkcje on-device AI. Wczesni adoptrzy nowych technologii mobilnych.</div>
-        <span class="seg-pill">Wydajność 4.67 · AI 4.36</span>
+        <div class="seg-desc">They want <strong style="color:var(--c2)">computing power and artificial intelligence</strong>. Brand doesn't impress them — what matters is the chipset and on-device AI features. Early adopters of new mobile technologies.</div>
+        <span class="seg-pill">Performance 4.67 · AI 4.36</span>
         <span class="sil-badge">sil = 0.52</span>
       </div>
 
-      <!-- Klaster 3 -->
+      <!-- Cluster 3 -->
       <div class="seg-card c3 reveal">
-        <div class="seg-num">Klaster 3 · 34 osoby · 34%</div>
-        <div class="seg-name">Esteci<br>Premium</div>
+        <div class="seg-num">Cluster 3 · 34 people · 34%</div>
+        <div class="seg-name">Premium<br>Aesthetes</div>
         <div class="seg-stats">
           <div>
-            <div class="seg-stat"><span class="s-label">Bateria</span><span class="s-val">2.50 / 5</span></div>
+            <div class="seg-stat"><span class="s-label">Battery</span><span class="s-val">2.50 / 5</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:50%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Aparat</span><span class="s-val" style="color:var(--c3)">4.62 / 5 ↑↑</span></div>
+            <div class="seg-stat"><span class="s-label">Camera</span><span class="s-val" style="color:var(--c3)">4.62 / 5 ↑↑</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:92.4%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Wydajność</span><span class="s-val">3.50 / 5</span></div>
+            <div class="seg-stat"><span class="s-label">Performance</span><span class="s-val">3.50 / 5</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:70%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Marka</span><span class="s-val" style="color:var(--c3)">4.59 / 5 ↑↑</span></div>
+            <div class="seg-stat"><span class="s-label">Brand</span><span class="s-val" style="color:var(--c3)">4.59 / 5 ↑↑</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:91.8%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Funkcje AI</span><span class="s-val" style="color:var(--c3)">4.50 / 5 ↑</span></div>
+            <div class="seg-stat"><span class="s-label">AI Features</span><span class="s-val" style="color:var(--c3)">4.50 / 5 ↑</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:90%"></div></div>
           </div>
           <div>
-            <div class="seg-stat"><span class="s-label">Budżet</span><span class="s-val" style="color:var(--c3)">6 866 zł ↑↑</span></div>
+            <div class="seg-stat"><span class="s-label">Budget</span><span class="s-val" style="color:var(--c3)">PLN 6,866 ↑↑</span></div>
             <div class="seg-bar-wrap"><div class="seg-bar" style="width:100%"></div></div>
           </div>
         </div>
-        <div class="seg-desc">Trio priorytetów: <strong style="color:var(--c3)">aparat, marka i AI</strong>, wszystkie oceniane powyżej 4.5/5. Najwyższy budżet — blisko 7 000 zł. Klienci dla których smartfon to symbol statusu z możliwościami fotograficznymi.</div>
-        <span class="seg-pill">Aparat 4.62 · Marka 4.59 · Budżet 6 866 zł</span>
+        <div class="seg-desc">A trio of priorities: <strong style="color:var(--c3)">camera, brand, and AI</strong>, all rated above 4.5/5. Highest budget — nearly PLN 7,000. Customers for whom a smartphone is a status symbol with photographic capabilities.</div>
+        <span class="seg-pill">Camera 4.62 · Brand 4.59 · Budget PLN 6,866</span>
         <span class="sil-badge">sil = 0.52</span>
       </div>
 
@@ -506,22 +506,22 @@
 <!-- DIAGNOSTIC -->
 <section>
   <div class="container">
-    <p class="section-tag">02 · Diagnostyka metody</p>
-    <h2 class="section-title">Dobór liczby skupień</h2>
+    <p class="section-tag">02 · Method Diagnostics</p>
+    <h2 class="section-title">Selecting the Number of Clusters</h2>
     <div class="charts-grid">
 
       <div class="chart-card reveal">
         <div class="chart-header">
           <div class="chart-icon" style="background:rgba(91,156,246,0.15)">📉</div>
           <div class="chart-header-text">
-            <div class="chart-title">Metoda Łokcia</div>
-            <div class="chart-subtitle">Wykres osierocenia · Ward D2</div>
+            <div class="chart-title">Elbow Method</div>
+            <div class="chart-subtitle">Scree plot · Ward D2</div>
           </div>
         </div>
-        <div class="chart-img-wrap"><img src="metoda_lokcia.png" alt="Metoda Łokcia"></div>
+        <div class="chart-img-wrap"><img src="metoda_lokcia.png" alt="Elbow Method"></div>
         <div class="chart-analysis">
-          <div class="analysis-badge">Interpretacja</div>
-          <p>Krzywa odległości wiązania wykazuje <strong>wyraźne załamanie przy k&nbsp;=&nbsp;3</strong>: skok między połączeniem drugiej a trzeciej grupy jest wielokrotnie większy niż jakikolwiek kolejny. Dane tworzą zwartą strukturę, dzięki czemu załamanie łokcia jest ostre i jednoznaczne. Wybór <strong>trzech skupień jest w tym przypadku bardzo czytelny</strong> i nie wymaga dodatkowej weryfikacji.</p>
+          <div class="analysis-badge">Interpretation</div>
+          <p>The linkage distance curve shows a <strong>clear elbow at k&nbsp;=&nbsp;3</strong>: the jump between merging the second and third group is many times larger than any subsequent one. The data form a compact structure, making the elbow sharp and unambiguous. The choice of <strong>three clusters is very clear in this case</strong> and requires no additional verification.</p>
         </div>
       </div>
 
@@ -529,14 +529,14 @@
         <div class="chart-header">
           <div class="chart-icon" style="background:rgba(78,203,141,0.15)">🔬</div>
           <div class="chart-header-text">
-            <div class="chart-title">Metoda Silhouette</div>
-            <div class="chart-subtitle">Średnia szerokość sylwetki · k = 2–15</div>
+            <div class="chart-title">Silhouette Method</div>
+            <div class="chart-subtitle">Average silhouette width · k = 2–15</div>
           </div>
         </div>
-        <div class="chart-img-wrap"><img src="silhouette_method.png" alt="Metoda Silhouette"></div>
+        <div class="chart-img-wrap"><img src="silhouette_method.png" alt="Silhouette Method"></div>
         <div class="chart-analysis">
-          <div class="analysis-badge">Interpretacja</div>
-          <p>Wykres wskazuje matematyczne optimum przy <strong>k&nbsp;=&nbsp;2</strong> (najwyższa średnia szerokość sylwetki ≈ 0.61). Zdecydowano się jednak na <strong>k&nbsp;=&nbsp;3</strong>, ponieważ podział na dwie grupy zlewałby Technologicznych Innowatorów z Estetykami Premium w jedną masę, tracąc istotną różnicę w priorytetach (wydajność vs. marka). Dla k&nbsp;=&nbsp;3 uzyskano wartość <strong>0.58</strong>, co wciąż klasyfikuje skupienia jako <strong>dobrze odseparowane</strong> według skali Kaufmana i Rousseeuwa (≥0.5 = dobra struktura).</p>
+          <div class="analysis-badge">Interpretation</div>
+          <p>The chart indicates a mathematical optimum at <strong>k&nbsp;=&nbsp;2</strong> (highest average silhouette width ≈ 0.61). However, <strong>k&nbsp;=&nbsp;3</strong> was chosen because splitting into two groups would merge Tech Innovators and Premium Aesthetes into one mass, losing the crucial difference in priorities (performance vs. brand). For k&nbsp;=&nbsp;3, a value of <strong>0.58</strong> was obtained, which still classifies the clusters as <strong>well-separated</strong> according to the Kaufman and Rousseeuw scale (≥0.5 = good structure).</p>
         </div>
       </div>
 
@@ -547,22 +547,22 @@
 <!-- HIERARCHY -->
 <section>
   <div class="container">
-    <p class="section-tag">03 · Struktura hierarchiczna</p>
-    <h2 class="section-title">Analiza dendrogramu i sylwetek</h2>
+    <p class="section-tag">03 · Hierarchical Structure</p>
+    <h2 class="section-title">Dendrogram and Silhouette Analysis</h2>
     <div class="charts-grid">
 
       <div class="chart-card full reveal">
         <div class="chart-header">
           <div class="chart-icon" style="background:rgba(232,164,74,0.15)">🌳</div>
           <div class="chart-header-text">
-            <div class="chart-title">Dendrogram — Metoda Warda</div>
-            <div class="chart-subtitle">Hierarchiczna struktura skupień · Odległość euklidesowa · 6 zmiennych</div>
+            <div class="chart-title">Dendrogram — Ward's Method</div>
+            <div class="chart-subtitle">Hierarchical cluster structure · Euclidean distance · 6 variables</div>
           </div>
         </div>
         <div class="chart-img-wrap"><img src="dendrogram.png" alt="Dendrogram"></div>
         <div class="chart-analysis">
-          <div class="analysis-badge">Interpretacja</div>
-          <p>Dendrogram ujawnia <strong>trzy bardzo wyraźnie odseparowane gałęzie</strong> — odległości między klastrami w miejscu cięcia są znacząco większe niż odległości wewnątrz każdej gałęzi. Taka proporcja jest cechą <strong>dobrze ustrukturyzowanych danych</strong>. Gałąź odpowiadająca Klasterowi 1 (Długodystansowcy) łączy się z pozostałymi dwoma przy najwyższej odległości, co oznacza, że jest on <strong>najbardziej odmienny</strong> spośród wszystkich grup — co intuicyjnie potwierdzają dane: jedyna cecha dominująca to bateria, a budżet jest blisko czterokrotnie niższy od Klastra 3. Cięcie przy k&nbsp;=&nbsp;3 jest jedynym sensownym miejscem podziału w tym drzewie.</p>
+          <div class="analysis-badge">Interpretation</div>
+          <p>The dendrogram reveals <strong>three very clearly separated branches</strong> — the distances between clusters at the cut point are significantly greater than the distances within each branch. This proportion is a hallmark of <strong>well-structured data</strong>. The branch corresponding to Cluster 1 (Long-Distance Users) merges with the other two at the highest distance, meaning it is <strong>the most distinct</strong> of all groups — intuitively confirmed by the data: the only dominant feature is battery, and the budget is nearly four times lower than Cluster 3. The cut at k&nbsp;=&nbsp;3 is the only sensible split point in this tree.</p>
         </div>
       </div>
 
@@ -570,14 +570,14 @@
         <div class="chart-header">
           <div class="chart-icon" style="background:rgba(78,203,141,0.15)">📊</div>
           <div class="chart-header-text">
-            <div class="chart-title">Wykres Sylwetki — szczegółowy</div>
-            <div class="chart-subtitle">Każdy klient · k = 3 skupień · wartości per klaster</div>
+            <div class="chart-title">Silhouette Plot — Detailed</div>
+            <div class="chart-subtitle">Each customer · k = 3 clusters · values per cluster</div>
           </div>
         </div>
         <div class="chart-img-wrap"><img src="silhouette_detail.png" alt="Silhouette Detail"></div>
         <div class="chart-analysis">
-          <div class="analysis-badge">Interpretacja</div>
-          <p><strong>Klaster 1 osiąga silhouette = 0.70</strong> — to bardzo wysoka wartość świadcząca o tym, że Pragmatyczni Długodystansowcy tworzą wyjątkowo zwartą, jednorodną grupę niemal bez obserwacji granicznych. Klastry 2 i 3 mają silhouette = 0.52, co jest wynikiem <strong>dobrym</strong> — oznacza, że nieliczni klienci „balansują" między Technologicznymi Innowatorami a Estetykami Premium (co ma sens: obie grupy cenią AI, różni je natomiast priorytet marka vs. czysta wydajność). <strong>Brak obserwacji z wartościami ujemnymi</strong> potwierdza, że żaden klient nie jest błędnie zaklasyfikowany.</p>
+          <div class="analysis-badge">Interpretation</div>
+          <p><strong>Cluster 1 achieves silhouette = 0.70</strong> — a very high value indicating that Pragmatic Long-Distance Users form an exceptionally compact, homogeneous group with almost no borderline observations. Clusters 2 and 3 have silhouette = 0.52, which is a <strong>good</strong> result — meaning a few customers "balance" between Tech Innovators and Premium Aesthetes (which makes sense: both groups value AI, but differ in priority: brand vs. raw performance). <strong>No observations with negative values</strong> confirms that no customer is misclassified.</p>
         </div>
       </div>
 
@@ -588,22 +588,22 @@
 <!-- PROFILES -->
 <section>
   <div class="container">
-    <p class="section-tag">04 · Profilowanie segmentów</p>
-    <h2 class="section-title">Porównanie grup i budżetów</h2>
+    <p class="section-tag">04 · Segment Profiling</p>
+    <h2 class="section-title">Group and Budget Comparison</h2>
     <div class="charts-grid">
 
       <div class="chart-card full reveal">
         <div class="chart-header">
           <div class="chart-icon" style="background:rgba(232,164,74,0.15)">📈</div>
           <div class="chart-header-text">
-            <div class="chart-title">Profile Segmentów — Średnie Ocen</div>
-            <div class="chart-subtitle">Bateria · Aparat · Wydajność · Marka · Funkcje AI · skala 1–5</div>
+            <div class="chart-title">Segment Profiles — Average Ratings</div>
+            <div class="chart-subtitle">Battery · Camera · Performance · Brand · AI Features · scale 1–5</div>
           </div>
         </div>
-        <div class="chart-img-wrap"><img src="profile_segmentow.png" alt="Profile segmentów"></div>
+        <div class="chart-img-wrap"><img src="profile_segmentow.png" alt="Segment profiles"></div>
         <div class="chart-analysis">
-          <div class="analysis-badge">Interpretacja</div>
-          <p>Wykres profili jest wyjątkowo czytelny — linie trzech segmentów <strong>krzyżują się i rozchodzą</strong>, co potwierdza ich odmienność w różnych wymiarach. Klaster 1 (czerwony) osiąga najwyższy punkt przy Baterii (4.61) i najniższy przy Funkcjach AI (1.18) i Marce (1.39). Klaster 2 (zielony) dominuje przy Wydajności (4.67) i AI (4.36), a Klaster 3 (niebieski) przy Aparacie (4.62) i Marce (4.59). Co istotne, <strong>żaden segment nie jest liderem we wszystkich kategoriach jednocześnie</strong> — każdy ma wyraźną specjalizację, co ułatwia precyzyjne targetowanie kampanii marketingowych.</p>
+          <div class="analysis-badge">Interpretation</div>
+          <p>The profile chart is exceptionally clear — the lines of the three segments <strong>cross and diverge</strong>, confirming their differences across dimensions. Cluster 1 (red) peaks at Battery (4.61) and bottoms out at AI Features (1.18) and Brand (1.39). Cluster 2 (green) dominates at Performance (4.67) and AI (4.36), while Cluster 3 (blue) leads at Camera (4.62) and Brand (4.59). Importantly, <strong>no segment leads in all categories simultaneously</strong> — each has a distinct specialization, enabling precise targeting of marketing campaigns.</p>
         </div>
       </div>
 
@@ -611,14 +611,14 @@
         <div class="chart-header">
           <div class="chart-icon" style="background:rgba(78,203,141,0.15)">💳</div>
           <div class="chart-header-text">
-            <div class="chart-title">Budżet per Segment</div>
-            <div class="chart-subtitle">Średni budżet zakupowy w PLN</div>
+            <div class="chart-title">Budget per Segment</div>
+            <div class="chart-subtitle">Average purchase budget in PLN</div>
           </div>
         </div>
-        <div class="chart-img-wrap"><img src="budzet_per_segment.png" alt="Budżet per segment"></div>
+        <div class="chart-img-wrap"><img src="budzet_per_segment.png" alt="Budget per segment"></div>
         <div class="chart-analysis">
-          <div class="analysis-badge">Interpretacja</div>
-          <p>Rozpiętość budżetów jest ekonomicznie uderzająca: <strong>1 759 zł vs 6 866 zł</strong> — to różnica <strong>niemal 4-krotna</strong>. Klaster 1 (Długodystansowcy) mieści się w segmencie budżetowym i tanich mid-range. Klaster 2 (Innowatorzy) przy 4 355 zł celuje w upper-mid z dobrymi chipsetami. Klaster 3 (Esteci Premium) przy prawie 7 000 zł to jasny segment <strong>flagship i ultra-premium</strong> — iPhone Pro, Galaxy S Ultra, Pixel Pro. Tak wyraźna segmentacja budżetowa pozwala wprost mapować każdą grupę na konkretne modele i półki cenowe w sklepie.</p>
+          <div class="analysis-badge">Interpretation</div>
+          <p>The budget spread is economically striking: <strong>PLN 1,759 vs PLN 6,866</strong> — a difference of <strong>nearly 4×</strong>. Cluster 1 (Long-Distance Users) falls in the budget and affordable mid-range segment. Cluster 2 (Innovators) at PLN 4,355 targets upper-mid with good chipsets. Cluster 3 (Premium Aesthetes) at nearly PLN 7,000 is clearly the <strong>flagship and ultra-premium</strong> segment — iPhone Pro, Galaxy S Ultra, Pixel Pro. Such clear budget segmentation allows direct mapping of each group to specific models and price tiers in a store.</p>
         </div>
       </div>
 
@@ -626,14 +626,14 @@
         <div class="chart-header">
           <div class="chart-icon" style="background:rgba(91,156,246,0.15)">📦</div>
           <div class="chart-header-text">
-            <div class="chart-title">Wykresy Ramka-Wąsy</div>
-            <div class="chart-subtitle">Rozkład wartości cech · wszystkie segmenty</div>
+            <div class="chart-title">Box-Whisker Plots</div>
+            <div class="chart-subtitle">Feature value distribution · all segments</div>
           </div>
         </div>
-        <div class="chart-img-wrap"><img src="boxploty_cechy.png" alt="Box-ploty"></div>
+        <div class="chart-img-wrap"><img src="boxploty_cechy.png" alt="Box plots"></div>
         <div class="chart-analysis">
-          <div class="analysis-badge">Interpretacja</div>
-          <p>Box-ploty dobitnie potwierdzają wysoką jakość segmentacji: <strong>pudełka Q1–Q3 poszczególnych klastrów prawie się nie nakładają</strong> — zwłaszcza dla Baterii (Klaster 1 vs. pozostałe), Aparatu (Klaster 3 vs. pozostałe) i Marki. To wyjątkowy wynik w badaniach ankietowych. Wąskie pudełka Klastra 1 przy Marce i AI (wartości skupione blisko 1) oraz Klastra 3 przy Aparacie i Marce (skupione blisko 5) świadczą o <strong>bardzo małej wariancji wewnątrz grup</strong>. Jedyną cechą z nakładającymi się rozkładami jest Wydajność między Klastrem 2 a 3 — co ma sens, skoro oba segmenty reprezentują użytkowników wymagających.</p>
+          <div class="analysis-badge">Interpretation</div>
+          <p>Box plots emphatically confirm the high quality of segmentation: <strong>Q1–Q3 boxes of individual clusters barely overlap</strong> — especially for Battery (Cluster 1 vs. others), Camera (Cluster 3 vs. others), and Brand. This is an exceptional result for survey data. The narrow boxes of Cluster 1 for Brand and AI (values concentrated near 1) and Cluster 3 for Camera and Brand (concentrated near 5) indicate <strong>very low variance within groups</strong>. The only feature with overlapping distributions is Performance between Clusters 2 and 3 — which makes sense since both segments represent demanding users.</p>
         </div>
       </div>
 
@@ -644,36 +644,36 @@
 <!-- CONCLUSIONS -->
 <section>
   <div class="container">
-    <p class="section-tag">05 · Wnioski</p>
-    <h2 class="section-title">Rekomendacje strategiczne</h2>
+    <p class="section-tag">05 · Conclusions</p>
+    <h2 class="section-title">Strategic Recommendations</h2>
 
     <div class="findings-grid">
       <div class="finding-item reveal">
         <div class="finding-num">01</div>
-        <div class="finding-title" style="color:var(--c1)">Długodystansowcy → Budżet &amp; Rugged</div>
-        <div class="finding-body">33% próby, budżet ~1 759 zł. Poszukują telefonów z ogromną baterią (5 000+ mAh), w przystępnej cenie. Obojętni na markę i AI — decyzję podejmują wyłącznie na podstawie pojemności akumulatora i ceny. Skuteczne kanały: porównywarki, sklepy telecom z abonamentami, reklamy "czas pracy na baterii do X godzin".</div>
+        <div class="finding-title" style="color:var(--c1)">Long-Distance Users → Budget &amp; Rugged</div>
+        <div class="finding-body">33% of sample, budget ~PLN 1,759. Looking for phones with a huge battery (5,000+ mAh) at an affordable price. Indifferent to brand and AI — decisions are made solely based on battery capacity and price. Effective channels: comparison sites, telecom stores with subscriptions, ads like "battery life up to X hours".</div>
       </div>
       <div class="finding-item reveal">
         <div class="finding-num">02</div>
-        <div class="finding-title" style="color:var(--c2)">Innowatorzy → Upper-Mid AI-first</div>
-        <div class="finding-body">33% próby, budżet ~4 355 zł. Chcą najmocniejszego chipsetu i rozbudowanych funkcji AI (asystenci, edycja zdjęć AI, tłumaczenia on-device). Marka drugorzędna — kupią Pixel czy OnePlus tak samo chętnie jak Samsung. Idealni odbiorcy komunikatów technicznych: benchmarki AnTuTu, recenzje AI, kanały YouTube tech.</div>
+        <div class="finding-title" style="color:var(--c2)">Innovators → Upper-Mid AI-first</div>
+        <div class="finding-body">33% of sample, budget ~PLN 4,355. They want the most powerful chipset and advanced AI features (assistants, AI photo editing, on-device translation). Brand is secondary — they'll buy Pixel or OnePlus just as readily as Samsung. Ideal audience for technical content: AnTuTu benchmarks, AI reviews, tech YouTube channels.</div>
       </div>
       <div class="finding-item reveal">
         <div class="finding-num">03</div>
-        <div class="finding-title" style="color:var(--c3)">Esteci Premium → Flagship &amp; Lifestyle</div>
-        <div class="finding-body">34% próby, budżet ~6 866 zł. Kupują markę i możliwości aparatu — iPhone Pro Max, Galaxy S Ultra, Pixel Pro. AI to dla nich bonus, nie powód zakupu. Decyzja często emocjonalna i statusowa. Najskuteczniejsze: influencer marketing lifestyle, unboxingi, kampanie wizerunkowe z fotografią mobilną jako głównym motywem.</div>
+        <div class="finding-title" style="color:var(--c3)">Premium Aesthetes → Flagship &amp; Lifestyle</div>
+        <div class="finding-body">34% of sample, budget ~PLN 6,866. They buy brand and camera capabilities — iPhone Pro Max, Galaxy S Ultra, Pixel Pro. AI is a bonus for them, not a purchase reason. The decision is often emotional and status-driven. Most effective: lifestyle influencer marketing, unboxings, brand campaigns with mobile photography as the main theme.</div>
       </div>
     </div>
 
     <div class="conclusion-box reveal">
-      <h3>Podsumowanie analizy</h3>
-      <p>Hierarchiczna analiza skupień metodą Warda wyłoniła <strong>trzy dobrze odseparowane segmenty</strong> klientów rynku smartfonów. Wartości silhouette na poziomie <strong>0.52–0.70</strong> potwierdzają wysoką jakość podziału. Zmienne <em>Marka</em> i <em>Funkcje AI</em> są głównymi czynnikami wyróżniającymi Klaster 3 (Esteci Premium) od Klastra 2 (Innowatorzy). Trzy segmenty mają <strong>czytelne, biznesowo interpretowalne profile</strong> z budżetami rozpiętymi od 1 759 do 6 866 zł, co pozwala precyzyjnie mapować je na konkretne linie produktowe i strategie komunikacji.</p>
+      <h3>Analysis Summary</h3>
+      <p>Ward's hierarchical cluster analysis identified <strong>three well-separated segments</strong> of smartphone market customers. Silhouette values at <strong>0.52–0.70</strong> confirm the high quality of the partition. Variables <em>Brand</em> and <em>AI Features</em> are the main factors distinguishing Cluster 3 (Premium Aesthetes) from Cluster 2 (Innovators). The three segments have <strong>clear, businessly interpretable profiles</strong> with budgets ranging from PLN 1,759 to PLN 6,866, enabling precise mapping to specific product lines and communication strategies.</p>
     </div>
   </div>
 </section>
 
 <footer>
-  Analiza skupień · Metoda Warda · R 4.6.0 · baza_danych.xlsx · n = 100 · 6 zmiennych
+  Cluster Analysis · Ward's Method · R 4.6.0 · baza_danych.xlsx · n = 100 · 6 variables
 </footer>
 
 <script>

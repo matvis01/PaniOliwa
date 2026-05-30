@@ -1,10 +1,10 @@
 # =============================================================================
-# ANALIZA SKUPIEŃ – odpowiednik procedury z programu Statistica
-# Dane: baza_danych.xlsx (100 obserwacji)
-# Metoda Warda, odległość euklidesowa
+# CLUSTER ANALYSIS – equivalent of the procedure from Statistica
+# Data: baza_danych.xlsx (100 observations)
+# Ward's method, Euclidean distance
 # =============================================================================
 
-# ── 0. Pakiety ────────────────────────────────────────────────────────────────
+# ── 0. Packages ───────────────────────────────────────────────────────────────
 required <- c("readxl", "ggplot2", "ggdendro", "factoextra", "cluster", "dplyr", "tidyr")
 to_install <- required[!required %in% rownames(installed.packages())]
 if (length(to_install)) install.packages(to_install, repos = "https://cloud.r-project.org")
@@ -18,53 +18,62 @@ library(dplyr)
 library(tidyr)
 
 # =============================================================================
-# KROK 1 – WCZYTANIE DANYCH
+# STEP 1 – LOAD DATA
 # =============================================================================
 dane <- read_excel("baza_danych.xlsx")
-names(dane) <- trimws(names(dane))   # usuń ewentualne spacje z nazw kolumn
+names(dane) <- trimws(names(dane))   # remove potential whitespace from column names
 
-# Kolumny do segmentacji (nowy plik ma 2 dodatkowe cechy: Marka i Funkcje AI)
-cechy <- c("Bateria", "Aparat", "Wydajność", "Budżet", "Marka", "Funkcje AI")
+# Rename Polish column names to English
+names(dane)[names(dane) == "Bateria"]      <- "Battery"
+names(dane)[names(dane) == "Aparat"]       <- "Camera"
+names(dane)[names(dane) == "Wydajność"]    <- "Performance"
+names(dane)[names(dane) == "Budżet"]       <- "Budget"
+names(dane)[names(dane) == "Marka"]        <- "Brand"
+names(dane)[names(dane) == "Funkcje AI"]   <- "AI Features"
+names(dane)[names(dane) == "Id Klienta"]   <- "Customer ID"
 
-cat("Wczytano", nrow(dane), "obserwacji,", ncol(dane), "kolumn.\n")
-cat("Kolumny:", paste(names(dane), collapse = ", "), "\n\n")
+# Columns for segmentation (new file has 2 additional features: Brand and AI Features)
+cechy <- c("Battery", "Camera", "Performance", "Budget", "Brand", "AI Features")
+
+cat("Loaded", nrow(dane), "observations,", ncol(dane), "columns.\n")
+cat("Columns:", paste(names(dane), collapse = ", "), "\n\n")
 print(summary(dane[, cechy]))
 
 # =============================================================================
-# KROK 2 – HIERARCHICZNA ANALIZA SKUPIEŃ
-# Standaryzacja (z-score) → odległość euklidesowa → metoda Warda
-# Odpowiednik: Statistica ➔ Analiza skupień ➔ Metoda Warda
+# STEP 2 – HIERARCHICAL CLUSTER ANALYSIS
+# Standardisation (z-score) → Euclidean distance → Ward's method
+# Equivalent: Statistica ➔ Cluster Analysis ➔ Ward's Method
 # =============================================================================
-X <- scale(dane[, cechy])          # standaryzacja – każda cecha ma mean=0, sd=1
-rownames(X) <- dane$`Id Klienta`
+X <- scale(dane[, cechy])          # standardisation – each feature has mean=0, sd=1
+rownames(X) <- dane$`Customer ID`
 
-dist_macierz <- dist(X, method = "euclidean")
-hc <- hclust(dist_macierz, method = "ward.D2")   # Ward D2 = klasyczna Metoda Warda
+dist_matrix <- dist(X, method = "euclidean")
+hc <- hclust(dist_matrix, method = "ward.D2")   # Ward D2 = classic Ward's Method
 
 # =============================================================================
-# KROK 3 – WYKRESY DIAGNOSTYCZNE
+# STEP 3 – DIAGNOSTIC CHARTS
 # =============================================================================
 
-# ── 3a. METODA ŁOKCIA (Wykres osierocenia) ────────────────────────────────────
-# Odpowiednik: "Wykres osierocenia" w Statistica
-# Szukamy "załamania" – miejsca, gdzie krzywa gwałtownie rośnie
+# ── 3a. ELBOW METHOD (Scree plot) ─────────────────────────────────────────────
+# Equivalent: "Scree plot" in Statistica
+# Look for the "elbow" – the point where the curve rises sharply
 
-kolory    <- c("#e74c3c", "#2ecc71", "#3498db", "#f39c12", "#9b59b6")
-k_wybrane <- 3   # <── ZMIEŃ po analizie wykresu łokcia / silhouette
-wysokosci <- rev(hc$height)
+colours    <- c("#e74c3c", "#2ecc71", "#3498db", "#f39c12", "#9b59b6")
+k_selected <- 3   # <── CHANGE after inspecting the elbow / silhouette chart
+heights    <- rev(hc$height)
 k_max <- 15
-df_lokiec <- data.frame(
-  k         = 2:(k_max + 1),
-  odleglosc = wysokosci[1:k_max]
+df_elbow <- data.frame(
+  k        = 2:(k_max + 1),
+  distance = heights[1:k_max]
 )
 
-p_lokiec <- ggplot(df_lokiec, aes(x = k, y = odleglosc)) +
+p_elbow <- ggplot(df_elbow, aes(x = k, y = distance)) +
   geom_line(colour = "#2980b9", linewidth = 1.2) +
   geom_point(colour = "#2980b9", size = 3.5) +
   scale_x_continuous(breaks = 2:(k_max + 1)) +
   labs(
-    title = "Metoda Łokcia – wybór liczby skupień",
-    x = "Liczba skupień (k)", y = "Odległość wiązania (suma kwadratów)"
+    title = "Elbow Method – Selecting the Number of Clusters",
+    x = "Number of clusters (k)", y = "Linkage distance (sum of squares)"
   ) +
   theme_minimal(base_size = 13) +
   theme(
@@ -72,17 +81,17 @@ p_lokiec <- ggplot(df_lokiec, aes(x = k, y = odleglosc)) +
     panel.grid.minor = element_blank()
   )
 
-print(p_lokiec)
-ggsave("metoda_lokcia.png", p_lokiec, width = 10, height = 5.5, dpi = 150)
-cat("Zapisano: metoda_lokcia.png\n")
+print(p_elbow)
+ggsave("metoda_lokcia.png", p_elbow, width = 10, height = 5.5, dpi = 150)
+cat("Saved: metoda_lokcia.png\n")
 
-# ── 3b. METODA SILHOUETTE ─────────────────────────────────────────────────────
-# Dla każdej liczby skupień k liczy średnią szerokość sylwetki (im bliżej 1, tym lepiej)
-# Najwyższy słupek = optymalna liczba skupień
+# ── 3b. SILHOUETTE METHOD ─────────────────────────────────────────────────────
+# For each number of clusters k, compute average silhouette width (closer to 1 = better)
+# Highest bar = optimal number of clusters
 
 sil_scores <- sapply(2:k_max, function(k) {
-  klastry <- cutree(hc, k = k)
-  mean(silhouette(klastry, dist_macierz)[, "sil_width"])
+  clusters <- cutree(hc, k = k)
+  mean(silhouette(clusters, dist_matrix)[, "sil_width"])
 })
 
 df_sil <- data.frame(k = 2:k_max, sil = sil_scores)
@@ -100,8 +109,8 @@ p_silhouette_avg <- ggplot(df_sil, aes(x = k, y = sil)) +
            label = paste("Optimum: k =", k_sil_opt),
            colour = "#e74c3c", fontface = "bold", size = 4) +
   labs(
-    title = "Metoda Silhouette – wybór liczby skupień",
-    x = "Liczba skupień (k)", y = "Średnia szerokość sylwetki"
+    title = "Silhouette Method – Selecting the Number of Clusters",
+    x = "Number of clusters (k)", y = "Average silhouette width"
   ) +
   theme_minimal(base_size = 13) +
   theme(
@@ -111,99 +120,99 @@ p_silhouette_avg <- ggplot(df_sil, aes(x = k, y = sil)) +
 
 print(p_silhouette_avg)
 ggsave("silhouette_method.png", p_silhouette_avg, width = 10, height = 5.5, dpi = 150)
-cat("Zapisano: silhouette_method.png\n")
+cat("Saved: silhouette_method.png\n")
 
-# Wykres sylwetki dla wybranego k (szczegółowy – każda obserwacja osobno)
-sil_detail <- silhouette(cutree(hc, k = k_wybrane), dist_macierz)
+# Detailed silhouette plot for selected k (each observation separately)
+sil_detail <- silhouette(cutree(hc, k = k_selected), dist_matrix)
 
-p_sil_detail <- fviz_silhouette(sil_detail, palette = kolory[1:k_wybrane],
+p_sil_detail <- fviz_silhouette(sil_detail, palette = colours[1:k_selected],
                                  ggtheme = theme_minimal(base_size = 12)) +
   labs(
-    title = paste("Wykres sylwetki dla k =", k_wybrane, "skupień"),
-    x = "Respondenci (posortowani wg klastra)", y = "Szerokość sylwetki"
+    title = paste("Silhouette plot for k =", k_selected, "clusters"),
+    x = "Respondents (sorted by cluster)", y = "Silhouette width"
   ) +
   theme(plot.title = element_text(face = "bold", size = 15))
 
 print(p_sil_detail)
 ggsave("silhouette_detail.png", p_sil_detail, width = 12, height = 6, dpi = 150)
-cat("Zapisano: silhouette_detail.png\n")
+cat("Saved: silhouette_detail.png\n")
 
 # ── 3c. DENDROGRAM ────────────────────────────────────────────────────────────
-# Odpowiednik: "Wykres drzewkowy (dendrogram)" w Statistica
+# Equivalent: "Tree diagram (dendrogram)" in Statistica
 #
-wysokosc_ciecia <- mean(
-  sort(hc$height, decreasing = TRUE)[c(k_wybrane - 1, k_wybrane)]
+cut_height <- mean(
+  sort(hc$height, decreasing = TRUE)[c(k_selected - 1, k_selected)]
 )
 
-# Dendrogram z pakietu factoextra – automatycznie koloruje gałęzie
+# Dendrogram from factoextra – automatically colours branches
 p_dendrogram <- fviz_dend(
   hc,
-  k             = k_wybrane,
+  k             = k_selected,
   cex           = 0.45,
   lwd           = 0.6,
-  k_colors      = c("#e74c3c", "#2ecc71", "#3498db", "#f39c12", "#9b59b6")[1:k_wybrane],
+  k_colors      = c("#e74c3c", "#2ecc71", "#3498db", "#f39c12", "#9b59b6")[1:k_selected],
   color_labels_by_k = TRUE,
   rect          = TRUE,
-  rect_border   = c("#e74c3c", "#2ecc71", "#3498db", "#f39c12", "#9b59b6")[1:k_wybrane],
+  rect_border   = c("#e74c3c", "#2ecc71", "#3498db", "#f39c12", "#9b59b6")[1:k_selected],
   rect_fill     = TRUE,
-  main          = paste("Dendrogram – Metoda Warda |", k_wybrane, "skupień"),
+  main          = paste("Dendrogram – Ward's Method |", k_selected, "clusters"),
   sub           = "",
-  xlab          = "Respondenci (ID)",
-  ylab          = "Odległość wiązania"
+  xlab          = "Respondents (ID)",
+  ylab          = "Linkage distance"
 ) +
   theme(plot.title = element_text(face = "bold", size = 15))
 
 print(p_dendrogram)
 ggsave("dendrogram.png", p_dendrogram, width = 16, height = 7, dpi = 150)
-cat("Zapisano: dendrogram.png\n")
+cat("Saved: dendrogram.png\n")
 
 # =============================================================================
-# KROK 4 – PRZYPISANIE OBSERWACJI DO KLASTRÓW
-# Odpowiednik: "Zapisz klasyfikację i odległości" w Statistica
+# STEP 4 – ASSIGN OBSERVATIONS TO CLUSTERS
+# Equivalent: "Save classification and distances" in Statistica
 # =============================================================================
-dane$Klaster <- factor(cutree(hc, k = k_wybrane))
+dane$Cluster <- factor(cutree(hc, k = k_selected))
 
-cat("\nRozkład respondentów w klastrach:\n")
-print(table(dane$Klaster))
+cat("\nDistribution of respondents across clusters:\n")
+print(table(dane$Cluster))
 
 write.csv(dane, "dane_z_klastrami.csv", row.names = FALSE)
-cat("Zapisano: dane_z_klastrami.csv\n\n")
+cat("Saved: dane_z_klastrami.csv\n\n")
 
 # =============================================================================
-# KROK 5 – PROFILOWANIE SEGMENTÓW
-# Odpowiednik: Statystyki ➔ Podstawowe ➔ Przekroje (średnie per klaster)
+# STEP 5 – SEGMENT PROFILING
+# Equivalent: Statistics ➔ Basic ➔ Breakdowns (means per cluster)
 # =============================================================================
 
-# ── 5a. Tabela średnich ───────────────────────────────────────────────────────
-srednie <- dane %>%
-  group_by(Klaster) %>%
+# ── 5a. Means table ───────────────────────────────────────────────────────────
+means <- dane %>%
+  group_by(Cluster) %>%
   summarise(across(all_of(cechy), mean), .groups = "drop") %>%
   mutate(across(where(is.numeric), \(x) round(x, 2)))
 
-cat("Średnie wartości cech w każdym klastrze:\n")
-print(as.data.frame(srednie))
+cat("Average feature values in each cluster:\n")
+print(as.data.frame(means))
 
-# ── 5b. WYKRES PROFILI SEGMENTÓW ──────────────────────────────────────────────
-# Odpowiednik: "Wykres średnich" / profile w Statistica
-# Budżet skalujemy do 1-5 na potrzeby wykresu (żeby był porównywalny z resztą)
+# ── 5b. SEGMENT PROFILE CHART ─────────────────────────────────────────────────
+# Equivalent: "Mean plot" / profiles in Statistica
+# Budget is scaled to 1-5 for the chart (to make it comparable with the rest)
 
-cechy_skala <- c("Bateria", "Aparat", "Wydajność", "Marka", "Funkcje AI")   # cechy na skali 1-5
+features_scale <- c("Battery", "Camera", "Performance", "Brand", "AI Features")   # features on 1-5 scale
 
-df_profil <- srednie %>%
-  select(Klaster, all_of(cechy_skala)) %>%
-  pivot_longer(-Klaster, names_to = "Cecha", values_to = "Srednia")
+df_profile <- means %>%
+  select(Cluster, all_of(features_scale)) %>%
+  pivot_longer(-Cluster, names_to = "Feature", values_to = "Mean")
 
-p_profil <- ggplot(df_profil, aes(x = Cecha, y = Srednia,
-                                   colour = Klaster, group = Klaster)) +
+p_profile <- ggplot(df_profile, aes(x = Feature, y = Mean,
+                                    colour = Cluster, group = Cluster)) +
   geom_line(linewidth = 1.4) +
   geom_point(size = 5) +
-  geom_label(aes(label = round(Srednia, 2)), size = 3.5,
+  geom_label(aes(label = round(Mean, 2)), size = 3.5,
              show.legend = FALSE, nudge_y = 0.08, fontface = "bold") +
-  scale_colour_manual(values = kolory) +
+  scale_colour_manual(values = colours) +
   scale_y_continuous(limits = c(1, 5), breaks = 1:5) +
   labs(
-    title = "Profile segmentów – średnie oceny cech (skala 1–5)",
-    x = NULL, y = "Średnia ocena", colour = "Segment (Klaster)"
+    title = "Segment profiles – average feature ratings (scale 1–5)",
+    x = NULL, y = "Average rating", colour = "Segment (Cluster)"
   ) +
   theme_minimal(base_size = 13) +
   theme(
@@ -211,23 +220,23 @@ p_profil <- ggplot(df_profil, aes(x = Cecha, y = Srednia,
     legend.position = "top"
   )
 
-print(p_profil)
-ggsave("profile_segmentow.png", p_profil, width = 9, height = 6, dpi = 150)
-cat("Zapisano: profile_segmentow.png\n")
+print(p_profile)
+ggsave("profile_segmentow.png", p_profile, width = 9, height = 6, dpi = 150)
+cat("Saved: profile_segmentow.png\n")
 
-# ── 5c. WYKRES BUDŻETU PER KLASTER (słupkowy) ────────────────────────────────
-df_budzet <- srednie %>% select(Klaster, Budżet)
+# ── 5c. BUDGET PER CLUSTER CHART (bar chart) ─────────────────────────────────
+df_budget <- means %>% select(Cluster, Budget)
 
-p_budzet <- ggplot(df_budzet, aes(x = Klaster, y = Budżet, fill = Klaster)) +
+p_budget <- ggplot(df_budget, aes(x = Cluster, y = Budget, fill = Cluster)) +
   geom_col(width = 0.6, alpha = 0.85) +
-  geom_text(aes(label = paste0(round(Budżet, 0), " zł")),
+  geom_text(aes(label = paste0(round(Budget, 0), " PLN")),
             vjust = -0.5, fontface = "bold", size = 4.5) +
-  scale_fill_manual(values = kolory) +
-  scale_y_continuous(labels = scales::label_comma(big.mark = " ", suffix = " zł"),
+  scale_fill_manual(values = colours) +
+  scale_y_continuous(labels = scales::label_comma(big.mark = ",", suffix = " PLN"),
                      expand = expansion(mult = c(0, 0.12))) +
   labs(
-    title    = "Średni budżet na smartfon per segment",
-    x = "Segment (Klaster)", y = "Średni budżet [zł]", fill = "Klaster"
+    title    = "Average smartphone budget per segment",
+    x = "Segment (Cluster)", y = "Average budget [PLN]", fill = "Cluster"
   ) +
   theme_minimal(base_size = 13) +
   theme(
@@ -235,25 +244,25 @@ p_budzet <- ggplot(df_budzet, aes(x = Klaster, y = Budżet, fill = Klaster)) +
     legend.position = "none"
   )
 
-print(p_budzet)
-ggsave("budzet_per_segment.png", p_budzet, width = 7, height = 5, dpi = 150)
-cat("Zapisano: budzet_per_segment.png\n")
+print(p_budget)
+ggsave("budzet_per_segment.png", p_budget, width = 7, height = 5, dpi = 150)
+cat("Saved: budzet_per_segment.png\n")
 
-# ── 5d. WYKRESY RAMKA-WĄSY (Box-plot) ────────────────────────────────────────
-# Odpowiednik: "Wykresy ramka-wąsy" w Statistica
+# ── 5d. BOX-WHISKER PLOTS ─────────────────────────────────────────────────────
+# Equivalent: "Box-whisker plots" in Statistica
 
 df_box <- dane %>%
-  pivot_longer(cols = all_of(cechy), names_to = "Cecha", values_to = "Wartosc")
+  pivot_longer(cols = all_of(cechy), names_to = "Feature", values_to = "Value")
 
-p_boxplot <- ggplot(df_box, aes(x = Klaster, y = Wartosc, fill = Klaster)) +
+p_boxplot <- ggplot(df_box, aes(x = Cluster, y = Value, fill = Cluster)) +
   geom_boxplot(alpha = 0.75, outlier.shape = 21, outlier.size = 1.8,
                outlier.fill = "white") +
   geom_jitter(width = 0.15, alpha = 0.25, size = 1) +
-  facet_wrap(~ Cecha, scales = "free_y", ncol = 2) +
-  scale_fill_manual(values = kolory) +
+  facet_wrap(~ Feature, scales = "free_y", ncol = 2) +
+  scale_fill_manual(values = colours) +
   labs(
-    title = "Wykresy ramka-wąsy – rozkład cech w segmentach",
-    x = "Segment (Klaster)", y = "Wartość", fill = "Klaster"
+    title = "Box-Whisker Plots – Feature Distribution by Segment",
+    x = "Segment (Cluster)", y = "Value", fill = "Cluster"
   ) +
   theme_minimal(base_size = 13) +
   theme(
@@ -264,20 +273,20 @@ p_boxplot <- ggplot(df_box, aes(x = Klaster, y = Wartosc, fill = Klaster)) +
 
 print(p_boxplot)
 ggsave("boxploty_cechy.png", p_boxplot, width = 11, height = 8, dpi = 150)
-cat("Zapisano: boxploty_cechy.png\n")
+cat("Saved: boxploty_cechy.png\n")
 
 # =============================================================================
-# PODSUMOWANIE
+# SUMMARY
 # =============================================================================
 cat("\n══════════════════════════════════════════════════════════\n")
-cat("PLIKI WYNIKOWE:\n")
-cat("  metoda_lokcia.png      – dobór liczby skupień (łokieć)\n")
-cat("  dendrogram.png         – struktura hierarchiczna skupień\n")
-cat("  profile_segmentow.png  – porównanie średnich ocen per klaster\n")
-cat("  budzet_per_segment.png – średni budżet w każdym segmencie\n")
-cat("  boxploty_cechy.png     – rozkłady wartości per klaster\n")
-cat("  dane_z_klastrami.csv   – dane z kolumną 'Klaster'\n")
-cat("\nŚrednie per klaster (interpretacja segmentów):\n")
-print(as.data.frame(srednie))
+cat("OUTPUT FILES:\n")
+cat("  metoda_lokcia.png      – cluster count selection (elbow)\n")
+cat("  dendrogram.png         – hierarchical cluster structure\n")
+cat("  profile_segmentow.png  – mean feature ratings per cluster\n")
+cat("  budzet_per_segment.png – average budget per segment\n")
+cat("  boxploty_cechy.png     – feature value distributions per cluster\n")
+cat("  dane_z_klastrami.csv   – data with 'Cluster' column\n")
+cat("\nMeans per cluster (segment interpretation):\n")
+print(as.data.frame(means))
 cat("══════════════════════════════════════════════════════════\n")
-cat("WSKAZÓWKA: Zmień k_wybrane (linia ~70) jeśli łokieć sugeruje inną liczbę.\n")
+cat("TIP: Change k_selected (line ~53) if the elbow suggests a different number.\n")
